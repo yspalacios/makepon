@@ -1,123 +1,144 @@
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-
+/* Estilos base para el juego de Zentria */
 body{
     font-family: "Pixelify Sans", sans-serif;
-    background-image: url("assets/fondo.jpg");
+    background-image: url("assets/A\ dark\ forest\ scene\ in\ electric\ vivid\ colors\,\ strong\ hard\ light\,\ direct\ harsh\ shadows\,\ detailed\ textures\,\ and\ a\ high\ contrast.jpg");
     background-size: cover; /* Ajusta la imagen para cubrir todo el fondo */
     background-position: center; /* Centra la imagen en el fondo */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
     z-index: -1; /* Asegura que la imagen esté detrás del contenido */    
 }
 
-#seleccionar-mascota{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.titulo {
-    color: #03045e;
-    font-size: 80px;
-    
-}
-
-.subtitulo{
-    color: #03045e;
-    font-size: 30px;
-    background-color: rgb(189, 224, 254, 0.7);
-    border: 1px solid black;
-    border-radius: 20px;
-    width: 280px;
-    padding-left: 10px;
-}
-
-.tarjetas{
-    display: flex;
-    gap: 10px;
-}
-
-.tarjeta-de-mokepon{
-    box-sizing: border-box; /*Mantiene las dimensiones de la Caja */
-    width: 300px;
-    height: 300px;
-    background: rgb(189, 224, 254, 0.7);
-    padding: 10px;
-    border: 1px solid black;
-    border-radius: 20px;
+/* Estilos para modales */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #03045e;
-    flex-direction: column;
+    z-index: 1000;
 }
 
-.tarjeta-de-mokepon img{
-    width: 200px;
-    border-radius: 20px;
+.modal-content {
+    background-color: #2d3748;
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.tarjeta-de-mokepon p{
-    font-size: 25px;
+/* Botones */
+.game-button {
+    background-color: #4a5568;
+    color: #e2e8f0;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
 }
 
-input{
-    display: none;
+.game-button:hover {
+    background-color: #718096;
+    transform: scale(1.05);
 }
 
-#boton-mascota{
-    box-sizing: border-box;
-    width: 130px;
-    height: 40px;
-    background-color: chartreuse;
-    border: 2px solid black;
-    border-radius: 20px;
-    padding: 10px;
-    margin: 10px;
-    font-size: 20px;
+.start-button {
+    background-color: #48bb78;
 }
 
-#seleccionar-ataque{
-    flex-direction: column;
-    align-items: center;
+.start-button:hover {
+    background-color: #38a169;
 }
 
-.boton-ataque{
-    background-color: chartreuse;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    width: 120px;
-    font-size: 20px;
+.danger-button {
+    background-color: #e53e3e;
 }
 
-#resultado{
-    width: 200px;
-    background-color: rgb(189, 224, 254, 0.7);
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    font-size: 20px;
-    color: #03045e;
+.danger-button:hover {
+    background-color: #c53030;
 }
 
-#boton-reiniciar{
-    box-sizing: border-box;
-    width: 130px;
-    height: 40px;
-    background-color: chartreuse;
-    border: 2px solid black;
-    border-radius: 20px;
-    padding: 10px;
-    margin: 10px;
-    font-size: 20px;
+/* Tarjetas de personajes */
+.character-card {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
-.ataques{
-    display: grid;
-    grid-template-columns: 100px 100px;
-    text-align: center;
-    text-align: center;
+.character-card:hover {
+    border-color: #4a5568;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Efectos de texto */
+.game-title {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+}
+
+.story-text {
+    line-height: 1.6;
+    text-align: justify;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2d3748;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4a5568;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .character-card {
+        margin: 10px 0;
+    }
+}
+
+/* Efectos de hover adicionales */
+.hover-lift {
+    transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+}
+
+/* Fondo con degradado */
+.gradient-background {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
 }

@@ -1,75 +1,231 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MOKEPON</title>
-        <script src="./js/mokepon.js"></script>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-
-    <body>
-        <section id="seleccionar-mascota">
-            <h1 class="titulo">Mokepon</h1>
-
-            <h2 class="subtitulo">Elige tu Mascota:</h2>
-
-            <div class="tarjetas">
-                <label class="tarjeta-de-mokepon" for="hipodoge">
-                    <P>Hipodoge</P>
-                    <img src="./assets/hipodoge.png" alt="Hipodoge">
-                </label>
-                <input type="radio" name="mascota" id="hipodoge">
-    
-                <label class="tarjeta-de-mokepon" for="capipepo">
-                    <p>Capipepo</p>
-                    <img src="assets/capipepo.png" alt="Capipepo">
-                </label>
-                <input type="radio" name="mascota" id="capipepo">
-    
-                <label class="tarjeta-de-mokepon" for="ratigueya">
-                    <p>Ratigueya</p>
-                    <img src="assets/ratigueya.png" alt="Ratigueya">
-                </label>
-                <input type="radio" name="mascota" id="ratigueya">
+<head>
+    <meta charset="UTF-8">
+    <!-- Configuración para dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zentria: El Tesoro del Bosque Maldito</title>
+    <!-- Vinculación de la hoja de estilos personalizada -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Carga de Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Se incluye el archivo JavaScript que maneja la lógica del juego (mokepon.js) -->
+    <script src="js/mokepon.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
+    <!-- 
+      Modal de Campaña:
+      Esta ventana emergente se muestra al inicio para que el usuario seleccione la campaña.
+      Está inicialmente oculta (clase "hidden") y se muestra mediante JS.
+    -->
+    <div id="campModal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-xl text-center">
+            <h2 class="text-2xl font-bold mb-4">Selección de Campaña</h2>
+            <div class="space-y-4">
+                <!-- Botón para iniciar la partida -->
+                <button id="startGameBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
+                    Iniciar Partida
+                </button>
+                <!-- Botón para cambiar de campaña (función pendiente) -->
+                <button id="changeCampBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                    Cambiar de Campaña
+                </button>
             </div>
+        </div>
+    </div>
 
-            <button id="boton-mascota">Seleccionar</button>
-        </section>
-
-
-        <section id="seleccionar-ataque">
-            <h1 class="titulo">Mokepon</h1>
-            <h2 class="subtitulo">Elige tu Ataque:</h2>
-            
-            <div>
-                <button id="boton-fuego" class="boton-ataque">Fuego 🔥</button>
-                <button id="boton-agua" class="boton-ataque">Agua 💧</button>
-                <button id="boton-tierra" class="boton-ataque">Tierra 🌱</button>
+    <!-- 
+      Modal de Historia:
+      Esta ventana emergente muestra la historia del juego (el texto narrativo).
+      Se oculta inicialmente y se muestra después de seleccionar la campaña.
+      Incluye un botón para comenzar la batalla.
+    -->
+    <div id="storyModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center overflow-y-auto">
+        <div class="bg-gray-900 p-8 rounded-lg shadow-xl max-w-2xl text-center">
+            <!-- Contenedor para el texto de la historia -->
+            <div id="storyText" class="text-left space-y-4 max-h-[80vh] overflow-y-auto">
+                <h1 class="text-3xl font-bold text-center mb-6 text-red-500">El Tesoro del Bosque Maldito</h1>
+                <!-- Aquí se insertará el texto de la historia dinámicamente -->
             </div>
+            <!-- Botón para comenzar la batalla -->
+            <button id="startBattleBtn" class="mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Comenzar Batalla
+            </button>
+        </div>
+    </div>
 
+    <!-- 
+      Contador de Monedas:
+      Se muestra en la parte superior derecha y contiene el número de monedas disponibles.
+      Inicialmente está oculto y se muestra una vez que se inicia la partida.
+    -->
+    <div id="coinCounter" class="fixed top-4 right-4 bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-lg z-40 hidden">
+        <div class="flex items-center">
+            <img src="./assets/coin.png" alt="Moneda" class="w-6 h-6 mr-2">
+            <span id="monedas" class="font-bold">0</span>
+        </div>
+    </div>
 
-            <div id="mensajes">
-                <p id="resultado">Mucha Suerte!</p>
+    <!-- 
+      Botón de Tienda:
+      Permite al usuario acceder a la tienda de habilidades.
+      Se muestra en la esquina superior izquierda y está oculto inicialmente.
+    -->
+    <div id="shopButton" class="fixed top-4 left-4 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg shadow-lg z-40 hidden">
+        <a href="tienda.html" class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Tienda de Habilidades
+        </a>
+    </div>
 
-                <section id="reiniciar">
-                    <button id="boton-reiniciar">Reiniciar</button>
-                </section>
+    <!-- 
+      Selección de Personajes:
+      Se muestra el listado de personajes disponibles para jugar.
+      Cada tarjeta representa a un héroe (Tanke, Asesino, Mago y Guerrero).
+    -->
+    <div id="characterSelection" class="text-center">
+        <h1 class="text-4xl font-bold mb-8 text-red-500">Zentria: Campaña</h1>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Tarjeta del personaje Tanke -->
+            <div class="character-card bg-gray-800 p-4 rounded-lg hover:bg-gray-700 cursor-pointer">
+                <img src="./assets/tanke.webp" alt="Tanke" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="mt-2 text-xl font-semibold">Tanke</h3>
             </div>
-
-            <div class="ataques">
-                <div>
-                    <p id="vidas-jugador">3</p>
-                    <p id="mascota-jugador"></p>
-                    <p id="ataques-del-jugador"></p>
+            <!-- Tarjeta del personaje Asesino -->
+            <div class="character-card bg-gray-800 p-4 rounded-lg hover:bg-gray-700 cursor-pointer">
+                <img src="./assets/asesino.webp" alt="Asesino" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="mt-2 text-xl font-semibold">Asesino</h3>
+            </div>
+            <!-- Tarjeta del personaje Mago -->
+            <div class="character-card bg-gray-800 p-4 rounded-lg hover:bg-gray-700 cursor-pointer">
+                <img src="./assets/mago2.webp" alt="Mago" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="mt-2 text-xl font-semibold">Mago</h3>
+            </div>
+            <!-- Tarjeta del personaje Guerrero -->
+            <div class="character-card bg-gray-800 p-4 rounded-lg hover:bg-gray-700 cursor-pointer">
+                <img src="./assets/guerrero.webp" alt="Guerrero" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="mt-2 text-xl font-semibold">Guerrero</h3>
+            </div>
+        </div>
+        
+        <!-- 
+          Sección del Boss:
+          Muestra la tarjeta del jefe (Devora) con una imagen y descripción, indicando que no es seleccionable.
+        -->
+        <div class="mt-12 mb-8">
+            <h2 class="text-3xl font-bold text-yellow-500 mb-6">¡Vence al Boss para ganar tesoros!</h2>
+            <div class="boss-card bg-gray-800 p-6 rounded-lg border-2 border-red-600 max-w-md mx-auto">
+                <img src="./assets/jefe.jpeg" alt="Devora - Boss" class="w-full h-64 object-cover rounded-lg">
+                <h3 class="mt-4 text-2xl font-bold text-red-500">Devora</h3>
+                <p class="mt-2 text-gray-300">El Guardián de los Sacrificios, custodio de los tesoros del Bosque Maldito</p>
+                <div class="mt-4 bg-red-900 rounded-lg p-2">
+                    <p class="text-white font-bold">¡NO SELECCIONABLE!</p>
                 </div>
-
-                <div>
-                    <p id="vidas-enemigo">3</p>
-                    <p id="mascota-enemigo"></p>
-                    <p id="ataques-del-enemigo"></p>
-                </div>                
             </div>
-        </section>
-    </body>
+        </div>
+    </div>
+
+    <!-- 
+      Fin de la sección de selección de personajes.
+      El usuario verá esta pantalla para iniciar la campaña.
+    -->
+
+    <!-- 
+      Modal de Historia:
+      Este modal mostrará el texto narrativo de la campaña. El usuario podrá leer la historia antes de comenzar la batalla.
+    -->
+
+    <!-- (Nota: este modal ya se definió en la sección de "Modal de Historia" arriba) -->
+
+    <!-- 
+      Sección de scripts:
+      El siguiente bloque de script contiene la lógica para la campaña:
+      - Muestra el modal de campaña al cargar la página.
+      - Permite iniciar la partida y muestra la historia.
+      - Reproduce un audio y, al finalizar, muestra el botón para comenzar la batalla.
+      - Permite cambiar de campaña (actualmente con función pendiente).
+    -->
+    <script>
+        // Obtener referencias a elementos clave del DOM
+        const campModal = document.getElementById('campModal');
+        const storyModal = document.getElementById('storyModal');
+        const storyText = document.getElementById('storyText');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const changeCampBtn = document.getElementById('changeCampBtn');
+        const startBattleBtn = document.getElementById('startBattleBtn');
+        const coinCounter = document.getElementById('coinCounter');
+        const shopButton = document.getElementById('shopButton');
+
+        // Texto de la historia (narrativa de la campaña)
+        const story = `
+El Tesoro del Bosque Maldito
+
+En las tierras desoladas de Zentria, cuatro amigos de infancia - Miguel, Sofía, Raúl y Elena - crecieron juntos en un pequeño pueblo devastado por la pobreza extrema. Desde niños, habían escuchado leyendas sobre un tesoro legendario oculto en el Bosque de las Sombras, un lugar temido por todos por su oscuridad y peligros sobrenaturales.
+
+La situación en su pueblo era desesperada. Familias enteras morían de hambre, los campos estaban áridos y la esperanza se desvanecía como niebla bajo el sol ardiente. Un día, después de años de planificación y preparación, decidieron emprender la búsqueda del tesoro que podría salvar no solo a sus familias, sino a toda su comunidad.
+
+Equipados con mapas antiguos, herramientas rudimentarias y un pacto de hermandad más fuerte que el acero, ingresaron al Bosque de las Sombras. Los árboles, retorcidos como dedos espectrales, parecían observarlos con malevolencia. Criaturas indefinibles susurraban entre las sombras, y la niebla espesa lo cubría todo como un sudario.
+
+Tras días de travesía, descubrieron la entrada al legendario Coliseo de los Espíritus, un lugar donde los guerreros debían enfrentarse a sus propios miedos y a sus compañeros para obtener el premio final. Las reglas eran simples pero brutales: solo uno podría salir victorioso, y ese único ganador obtendría el tesoro completo.
+
+El jefe final, conocido como El Guardián de los Sacrificios, era un ser ancestral que observaba con ojos de fuego gélido. Su poder era tal que podía despojar a los competidores de todo, incluso de su propia voluntad. El premio: una reliquia capaz de transformar la más miserable de las tierras en un paraíso de abundancia.
+
+Miguel, Sofía, Raúl y Elena sabían que su amistad sería puesta a prueba más difícil. ¿Podrían sacrificar su vínculo por el bien de sus familias? ¿Quién de ellos estaría dispuesto a traicionar a los demás para salvar a su pueblo?
+
+El Coliseo esperaba. El tesoro brillaba en la distancia. Y el destino de Zentria pendía de un hilo más delgado que un cabello...
+        `;
+
+        // Al cargar el documento, se muestra el modal de campaña
+        document.addEventListener('DOMContentLoaded', () => {
+            campModal.classList.remove('hidden');
+            
+            // Inicializar monedas en localStorage si no existen
+            if (!localStorage.getItem('zentriaMonedas')) {
+                localStorage.setItem('zentriaMonedas', '0');
+            }
+            
+            // Mostrar las monedas actuales en el contador
+            document.getElementById('monedas').textContent = localStorage.getItem('zentriaMonedas');
+        });
+
+        // Al hacer clic en "Iniciar Partida"
+        startGameBtn.addEventListener('click', () => {
+            campModal.classList.add('hidden'); // Oculta el modal de campaña
+            storyText.innerHTML = story; // Inserta el texto de la historia
+            storyModal.classList.remove('hidden'); // Muestra el modal de historia
+            
+            // Muestra el contador de monedas y el botón de tienda
+            coinCounter.classList.remove('hidden');
+            shopButton.classList.remove('hidden');
+            
+            // Reproduce el audio de introducción (ubicado en la carpeta assets)
+            const audio = new Audio('./assets/ElevenLabs_2025-03-28T14_17_56_Callum_pre_sp110_s46_sb75_se0_b_m2.mp3');
+            audio.play().catch(error => {
+                console.error("Error reproduciendo audio:", error);
+                // Si ocurre un error, muestra el botón de batalla
+                startBattleBtn.classList.remove('hidden');
+            });
+
+            // Cuando finalice el audio, se muestra el botón para comenzar la batalla
+            audio.onended = () => {
+                startBattleBtn.classList.remove('hidden');
+            };
+
+            // Al hacer clic en "Comenzar Batalla", se pausa el audio y se oculta el modal de historia
+            startBattleBtn.addEventListener('click', () => {
+                audio.pause();
+                storyModal.classList.add('hidden');
+                // Aquí se iniciaría la lógica de batalla (por ejemplo, cargar la escena de combate)
+                // alert('¡Comienza la batalla en el Coliseo de los Espíritus!');
+            });
+        });
+
+        // Al hacer clic en "Cambiar de Campaña" (función pendiente)
+        changeCampBtn.addEventListener('click', () => {
+            alert('Función de cambio de campaña pendiente');
+        });
+    </script>
+</body>
 </html>

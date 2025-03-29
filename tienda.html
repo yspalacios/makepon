@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Se define la configuración de visualización para dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Habilidades - Zentria</title>
+    <!-- Se vincula la hoja de estilos personalizada -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Se carga Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!--
+      Contador de Monedas:
+      Esta sección muestra el contador de monedas, fijo en la parte superior derecha.
+    -->
+    <div id="coinCounter" class="fixed top-4 right-4 bg-yellow-600 text-white px-4 py-2 rounded-lg shadow-lg z-40">
+        <div class="flex items-center">
+            <!-- Icono de moneda -->
+            <img src="./assets/coin.png" alt="Moneda" class="w-6 h-6 mr-2">
+            <!-- Elemento donde se mostrará el número de monedas (se actualizará vía JS) -->
+            <span id="monedas" class="font-bold">0</span>
+        </div>
+    </div>
+    
+    <!--
+      Botón para volver al juego:
+      Ubicado en la esquina superior izquierda para regresar al juego (mokepon.html).
+    -->
+    <div class="fixed top-4 left-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg z-40">
+        <a href="mokepon.html" class="flex items-center">
+            <!-- Ícono con SVG para regresar -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+            </svg>
+            Volver al Juego
+        </a>
+    </div>
+
+    <!--
+      Contenedor principal de la tienda:
+      Aquí se muestra el título y las tarjetas de habilidades disponibles para comprar.
+    -->
+    <div class="container mx-auto py-20 px-4">
+        <h1 class="text-4xl font-bold text-center mb-12 text-purple-500">Tienda de Habilidades</h1>
+        
+        <!-- Grid con las tarjetas de habilidades -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Tarjeta de Habilidad 1: Daño Aumentado -->
+            <div class="skill-card bg-gray-800 p-6 rounded-lg shadow-xl">
+                <!-- Imagen representativa de la habilidad con su precio -->
+                <div class="relative mb-4">
+                    <img src="./assets/habilidad-damage.png" alt="Daño Aumentado" class="w-full h-48 object-cover rounded-lg" onerror="this.src='./assets/placeholder.png'">
+                    <!-- Etiqueta con el precio (50 monedas) -->
+                    <div class="absolute top-2 right-2 bg-yellow-600 text-white px-3 py-1 rounded-full font-bold flex items-center">
+                        <img src="./assets/coin.png" alt="Monedas" class="w-4 h-4 mr-1">
+                        <span>50</span>
+                    </div>
+                </div>
+                <!-- Nombre y descripción de la habilidad -->
+                <h3 class="text-xl font-semibold text-red-400">Golpe Poderoso</h3>
+                <p class="mt-2 text-gray-300">Aumenta el daño de tus ataques en un 20%.</p>
+                <!-- Botón para comprar la habilidad.
+                     data-skill indica el identificador de la habilidad,
+                     data-price el costo en monedas. -->
+                <button data-skill="danio_aumentado" data-price="50" class="buy-skill mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                    Comprar Habilidad
+                </button>
+                <!-- Estado de la habilidad, que se mostrará cuando ya esté adquirida -->
+                <span class="skill-status mt-2 text-green-500 hidden">Habilidad Adquirida</span>
+            </div>
+            
+            <!-- Tarjeta de Habilidad 2: Vida Extra -->
+            <div class="skill-card bg-gray-800 p-6 rounded-lg shadow-xl">
+                <div class="relative mb-4">
+                    <img src="./assets/habilidad-vida.png" alt="Vida Extra" class="w-full h-48 object-cover rounded-lg" onerror="this.src='./assets/placeholder.png'">
+                    <div class="absolute top-2 right-2 bg-yellow-600 text-white px-3 py-1 rounded-full font-bold flex items-center">
+                        <img src="./assets/coin.png" alt="Monedas" class="w-4 h-4 mr-1">
+                        <span>50</span>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold text-green-400">Corazón Indomable</h3>
+                <p class="mt-2 text-gray-300">Aumenta tus vidas máximas en 1. ¡Una oportunidad más!</p>
+                <button data-skill="vida_extra" data-price="50" class="buy-skill mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                    Comprar Habilidad
+                </button>
+                <span class="skill-status mt-2 text-green-500 hidden">Habilidad Adquirida</span>
+            </div>
+            
+            <!-- Tarjeta de Habilidad 3: Precisión Aumentada -->
+            <div class="skill-card bg-gray-800 p-6 rounded-lg shadow-xl">
+                <div class="relative mb-4">
+                    <img src="./assets/habilidad-precision.png" alt="Precisión Aumentada" class="w-full h-48 object-cover rounded-lg" onerror="this.src='./assets/placeholder.png'">
+                    <div class="absolute top-2 right-2 bg-yellow-600 text-white px-3 py-1 rounded-full font-bold flex items-center">
+                        <img src="./assets/coin.png" alt="Monedas" class="w-4 h-4 mr-1">
+                        <span>50</span>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold text-blue-400">Ojo de Halcón</h3>
+                <p class="mt-2 text-gray-300">Aumenta la precisión de tus ataques en un 15%.</p>
+                <button data-skill="precision_aumentada" data-price="50" class="buy-skill mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                    Comprar Habilidad
+                </button>
+                <span class="skill-status mt-2 text-green-500 hidden">Habilidad Adquirida</span>
+            </div>
+            
+            <!-- Tarjeta de Habilidad 4: Regeneración -->
+            <div class="skill-card bg-gray-800 p-6 rounded-lg shadow-xl">
+                <div class="relative mb-4">
+                    <img src="./assets/habilidad-regeneracion.png" alt="Regeneración" class="w-full h-48 object-cover rounded-lg" onerror="this.src='./assets/placeholder.png'">
+                    <div class="absolute top-2 right-2 bg-yellow-600 text-white px-3 py-1 rounded-full font-bold flex items-center">
+                        <img src="./assets/coin.png" alt="Monedas" class="w-4 h-4 mr-1">
+                        <span>50</span>
+                    </div>
+                </div>
+                <h3 class="text-xl font-semibold text-purple-400">Regeneración Vital</h3>
+                <p class="mt-2 text-gray-300">Recupera 5 puntos de vida después de cada turno.</p>
+                <button data-skill="regeneracion" data-price="50" class="buy-skill mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                    Comprar Habilidad
+                </button>
+                <span class="skill-status mt-2 text-green-500 hidden">Habilidad Adquirida</span>
+            </div>
+        </div>
+    </div>
+
+    <!--
+      Modal de asignación de habilidad:
+      Se muestra cuando el usuario compra una habilidad y debe seleccionar a qué héroe asignarla.
+      Contiene:
+      - Título explicativo.
+      - Contenedor (con id "heroOptions") donde se insertarán las tarjetas de héroe vía JS.
+      - Botón "Cancelar" para cerrar el modal sin gastar monedas.
+    -->
+    <div id="heroAssignModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full text-center">
+            <h2 class="text-2xl font-bold mb-4">Selecciona un héroe para asignar la habilidad</h2>
+            <div id="heroOptions" class="mb-4"></div>
+            <button id="cancelAssign" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Cancelar
+            </button>
+        </div>
+    </div>
+
+    <!--
+      Mensaje de notificación:
+      Se muestra en la parte inferior derecha para notificar al usuario de acciones (éxito, error, etc.).
+    -->
+    <div id="notification" class="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-xl transform transition-all duration-300 translate-y-20 opacity-0">
+        <p id="notificationText"></p>
+    </div>
+
+    <!-- Se incluye el archivo tienda.js que contiene toda la lógica de compra y asignación -->
+    <script src="js/tienda.js"></script>
+</body>
+</html>
